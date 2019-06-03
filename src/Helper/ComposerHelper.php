@@ -18,7 +18,13 @@ class ComposerHelper
 
         $autoloadFunctions = spl_autoload_functions();
         foreach($autoloadFunctions as $autoloader){
-            $t= $autoloader;
+            if(is_array($autoloader) && isset($autoloader[0])){
+                $composerLoader = $autoloader[0];
+                if(is_object($composerLoader) && $composerLoader instanceof ClassLoader) {
+                    self::$composerLoader = $composerLoader;
+                    return self::$composerLoader;
+                }
+            }
         }
     }
 }
