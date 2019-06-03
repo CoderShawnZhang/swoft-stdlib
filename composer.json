@@ -9,7 +9,7 @@
             "email": "taobao1875@163.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability":"dev",
     "require":{
         "php": ">7.1.0"
     },
