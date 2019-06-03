@@ -15,7 +15,7 @@
     },
     "autoload": {
         "psr-4":{
-            "Swoft\\Stdlib\\":"src/"
+            "SwoftRewrite\\Stdlib\\":"src/"
         }
     }
 }
