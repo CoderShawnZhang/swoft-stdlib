@@ -2,27 +2,43 @@
 /**
  * Created by PhpStorm.
  * User: zhanghongbo
- * Date: 2019/6/3
- * Time: 下午4:15
+ * Date: 2019/6/14
+ * Time: 下午3:42
  */
 
 namespace SwoftRewrite\Stdlib\Helper;
 
-class ObjectHelper
+
+class PhpHelper
 {
-    public static function init($object,array $options)
+    /**
+     * Call by callback
+     *
+     * @param callable $cb   callback
+     * @param array    $args arguments
+     *
+     * @return mixed
+     */
+    public static function call($cb, ...$args)
     {
-        foreach($options as $property => $value){
-            if(is_numeric($property)){
-                continue;
+        if (is_string($cb)) {
+            // className::method
+            if (strpos($cb, '::') > 0) {
+                $cb = explode('::', $cb, 2);
+                // function
+            } elseif (function_exists($cb)) {
+                return $cb(...$args);
             }
-            $setter = 'set' . ucfirst($property);
-            if(method_exists($object,$setter)){
-                $object->$setter($value);
-            } elseif (property_exists($object,$property)){
-                $object->$property = $value;
-            }
+        } elseif (is_object($cb) && method_exists($cb, '__invoke')) {
+            return $cb(...$args);
         }
-        return $object;
+
+        if (is_array($cb)) {
+            [$obj, $mhd] = $cb;
+
+            return is_object($obj) ? $obj->$mhd(...$args) : $obj::$mhd(...$args);
+        }
+
+        return $cb(...$args);
     }
 }
